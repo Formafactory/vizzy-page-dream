@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import resinDark from "@/assets/resin-dark-bust.jpg";
 import marbleBust from "@/assets/marble-bust.jpg";
 import heroBust from "@/assets/hero-bust.jpg";
@@ -19,6 +20,8 @@ export const Configurator = () => {
   const [includeShoulders, setIncludeShoulders] = useState(false);
   const [finishPrice, setFinishPrice] = useState(0);
   const [previewImage, setPreviewImage] = useState(resinDark);
+  
+  const { ref: configRef, isVisible: configVisible } = useScrollAnimation(0.1);
 
   const sizes = {
     piccolo: { price: 53.90, height: "10cm", description: "Formato compatto" },
@@ -47,15 +50,20 @@ export const Configurator = () => {
   return (
     <section id="configurator" className="py-20 bg-surface">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid lg:grid-cols-12 gap-12">
+        <div 
+          ref={configRef}
+          className={`grid lg:grid-cols-12 gap-12 transition-all duration-1000 ${
+            configVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+        >
           
           {/* Left Column: Product Preview */}
           <div className="lg:col-span-7 lg:sticky lg:top-24 h-fit">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-border mb-6">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-border mb-6 hover-lift group">
               <img 
                 src={previewImage} 
                 alt="Anteprima busto" 
-                className="w-full h-auto object-cover aspect-[4/3]"
+                className="w-full h-auto object-cover aspect-[4/3] transition-transform duration-700 group-hover:scale-105"
               />
             </div>
             <div className="grid grid-cols-4 gap-4">
@@ -65,23 +73,25 @@ export const Configurator = () => {
                   onClick={() => setPreviewImage(img)}
                   src={img}
                   alt={`Anteprima ${idx + 1}`}
-                  className="rounded-lg cursor-pointer border hover:border-virgold transition-all"
+                  className={`rounded-lg cursor-pointer border transition-all duration-300 hover:scale-105 hover-lift ${
+                    previewImage === img ? "border-virgold ring-2 ring-virgold" : "hover:border-virgold"
+                  }`}
                 />
               ))}
             </div>
             
             {/* Trust Signals */}
             <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <UserCheck className="w-6 h-6 mx-auto mb-2 text-virgold" />
+              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
+                <UserCheck className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
                 <p className="text-xs font-bold">Somiglianza 95%</p>
               </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <Camera className="w-6 h-6 mx-auto mb-2 text-virgold" />
+              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
+                <Camera className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
                 <p className="text-xs font-bold">8-12 Foto</p>
               </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <Award className="w-6 h-6 mx-auto mb-2 text-virgold" />
+              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
+                <Award className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
                 <p className="text-xs font-bold">13 Anni Exp.</p>
               </div>
             </div>
@@ -104,10 +114,10 @@ export const Configurator = () => {
                     <div
                       key={key}
                       onClick={() => setSelectedSize(key as SizeOption)}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
                         selectedSize === key
-                          ? "border-virblack bg-virblack text-white"
-                          : "border-border bg-white hover:border-virgold"
+                          ? "border-virblack bg-virblack text-white scale-105"
+                          : "border-border bg-white hover:border-virgold hover:scale-102"
                       }`}
                     >
                       <div className="flex justify-between items-center mb-1">
@@ -132,10 +142,10 @@ export const Configurator = () => {
                     <div
                       key={key}
                       onClick={() => setSelectedMaterial(key as MaterialOption)}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
                         selectedMaterial === key
-                          ? "border-virblack bg-virblack text-white"
-                          : "border-border bg-white hover:border-virgold"
+                          ? "border-virblack bg-virblack text-white scale-105"
+                          : "border-border bg-white hover:border-virgold hover:scale-102"
                       }`}
                     >
                       <div className="flex justify-between items-center mb-1">
@@ -180,7 +190,7 @@ export const Configurator = () => {
                   <Button
                     variant="outline"
                     onClick={() => setFinishPrice(0)}
-                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white"
+                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white transition-all duration-300 hover:scale-105"
                   >
                     Bianco Opaco
                   </Button>
@@ -240,20 +250,23 @@ export const Configurator = () => {
               </div>
 
               {/* Sticky Bottom Total */}
-              <div className="sticky bottom-4 bg-white p-6 rounded-xl shadow-2xl border border-border z-30">
+              <div className="sticky bottom-4 bg-white p-6 rounded-xl shadow-2xl border border-border z-30 hover-lift">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <p className="text-3xl font-bold text-virblack">€{calculateTotal().replace(".", ",")}</p>
+                    <p className="text-3xl font-bold text-virblack transition-all duration-300">
+                      €{calculateTotal().replace(".", ",")}
+                    </p>
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                       Somiglianza garantita • Arte personalizzata
                     </p>
                   </div>
-                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded">
+                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded animate-pulse">
                     Arte Italiana
                   </span>
                 </div>
-                <Button className="w-full bg-virgold-dark hover:bg-virgold-dark/90 text-white font-bold py-4 text-lg uppercase tracking-wider shadow-lg">
-                  <ShoppingCart className="w-5 h-5 mr-2" /> Acquista Ora
+                <Button className="w-full bg-virgold-dark hover:bg-virgold-dark/90 text-white font-bold py-4 text-lg uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-virgold/30 group">
+                  <ShoppingCart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" /> 
+                  Acquista Ora
                 </Button>
               </div>
 
