@@ -1,51 +1,68 @@
 import { useState } from "react";
-import { UserCheck, Camera, Award, ShoppingCart, CheckCircle } from "lucide-react";
+import { UserCheck, Camera, Award, ShoppingCart, CheckCircle, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import coupleBust from "@/assets/couple_bust_3d_romantic.png";
+import familyBust from "@/assets/family_bust_3d_group.png";
+import giftValentine from "@/assets/gift_valentine_bust_3d.png";
 import resinDark from "@/assets/resin-dark-bust.jpg";
-import marbleBust from "@/assets/marble-bust.jpg";
-import heroBust from "@/assets/hero-bust.jpg";
-import photoRef from "@/assets/photo-reference.jpg";
 
 type SizeOption = "piccolo" | "medio" | "grande";
 type MaterialOption = "pla" | "resina";
+type PeopleOption = "singola" | "coppia" | "famiglia";
 
 export const Configurator = () => {
+  const [selectedPeople, setSelectedPeople] = useState<PeopleOption>("singola");
   const [selectedSize, setSelectedSize] = useState<SizeOption>("medio");
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialOption>("pla");
   const [includeShoulders, setIncludeShoulders] = useState(false);
   const [finishPrice, setFinishPrice] = useState(0);
-  const [previewImage, setPreviewImage] = useState(resinDark);
+  const [previewImage, setPreviewImage] = useState(coupleBust);
   
   const { ref: configRef, isVisible: configVisible } = useScrollAnimation(0.1);
 
+  const people = {
+    singola: { multiplier: 0, description: "Un solo soggetto" },
+    coppia: { multiplier: 1.25, description: "Due volti affiancati su base unica - Perfetto come regalo fidanzati, anniversario o San Valentino" },
+    famiglia: { multiplier: 2, description: "3-4 persone insieme - Scultura famiglia commemorativa, regalo nozze genitori" },
+  };
+
   const sizes = {
-    piccolo: { price: 53.90, height: "10cm", description: "Busto 3D compatto perfetto come statuetta da scrivania" },
-    medio: { price: 62.90, height: "15cm", description: "Il nostro formato più richiesto per ritratti e busti commemorativi" },
-    grande: { price: 79.90, height: "20cm", description: "Scultura 3D d'impatto per uffici, studi o salotti" },
+    piccolo: { price: 53.90, height: "10cm", description: "Busto 3D compatto, perfetto come regalo compleanno fidanzato o statuetta da scrivania" },
+    medio: { price: 62.90, height: "15cm", description: "Il formato più richiesto per regali anniversario, San Valentino e sculture commemorative" },
+    grande: { price: 79.90, height: "20cm", description: "Scultura 3D d'impatto, ideale come regalo matrimonio o per uffici e salotti" },
   };
 
   const materials = {
     pla: { price: 0, description: "Bioplastica derivata da fonti rinnovabili. Ideale per un busto 3D personalizzato economico ma di qualità, leggero e resistente" },
-    resina: { price: 12.58, description: "Per chi cerca un busto 3D professionale: dettagli ultra-definiti, superfici lisce e resa perfetta per sculture commemorative di pregio" },
+    resina: { 
+      getPrice: (basePrice: number) => basePrice * 0.3, 
+      description: "Per chi cerca un busto 3D professionale: dettagli ultra-definiti, superfici lisce e resa perfetta per sculture commemorative di pregio" 
+    },
   };
 
   const shouldersPrice = 10.80;
 
   const calculateTotal = () => {
+    const basePrice = sizes[selectedSize].price;
+    const peopleExtra = basePrice * people[selectedPeople].multiplier;
+    const materialExtra = selectedMaterial === "resina" ? materials.resina.getPrice(basePrice) : 0;
+    
     return (
-      sizes[selectedSize].price +
-      materials[selectedMaterial].price +
+      basePrice +
+      peopleExtra +
+      materialExtra +
       (includeShoulders ? shouldersPrice : 0) +
       finishPrice
     ).toFixed(2);
   };
 
-  const images = [resinDark, marbleBust, heroBust, photoRef];
+  const images = [coupleBust, resinDark, familyBust, giftValentine];
 
   return (
     <section id="configurator" className="py-20 bg-surface">
@@ -81,7 +98,7 @@ export const Configurator = () => {
             </div>
             
             {/* Trust Signals */}
-            <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+            <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
               <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
                 <UserCheck className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
                 <p className="text-xs font-bold">Somiglianza curata a mano</p>
@@ -93,6 +110,10 @@ export const Configurator = () => {
               <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
                 <Award className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
                 <p className="text-xs font-bold">13 anni di stampa 3D</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
+                <Heart className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
+                <p className="text-xs font-bold">Regalo romantico per coppie</p>
               </div>
             </div>
           </div>
@@ -109,7 +130,48 @@ export const Configurator = () => {
                 Made in Italy – spedizione busti 3D in tutta Europa
               </div>
 
-              {/* 1. Dimensioni */}
+              {/* 1. Numero di Persone */}
+              <div className="mb-8">
+                <h3 className="font-bold text-lg mb-4">Numero di persone</h3>
+                <RadioGroup value={selectedPeople} onValueChange={(value) => setSelectedPeople(value as PeopleOption)}>
+                  <div className="space-y-3">
+                    {Object.entries(people).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
+                          selectedPeople === key
+                            ? "border-virblack bg-virblack text-white scale-105"
+                            : "border-border bg-white hover:border-virgold hover:scale-102"
+                        }`}
+                        onClick={() => setSelectedPeople(key as PeopleOption)}
+                      >
+                        <div className="flex items-start gap-3">
+                          <RadioGroupItem 
+                            value={key} 
+                            id={key} 
+                            className={selectedPeople === key ? "border-virgold text-virgold" : ""}
+                          />
+                          <Label htmlFor={key} className="cursor-pointer flex-1">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="font-bold capitalize">{key}</span>
+                              {value.multiplier > 0 && (
+                                <span className={`font-bold text-sm ${selectedPeople === key ? "text-virgold" : ""}`}>
+                                  +{(value.multiplier * 100).toFixed(0)}%
+                                </span>
+                              )}
+                            </div>
+                            <p className={`text-xs ${selectedPeople === key ? "text-white/70" : "text-muted-foreground"}`}>
+                              {value.description}
+                            </p>
+                          </Label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {/* 2. Dimensioni */}
               <div className="mb-8">
                 <h3 className="font-bold text-lg mb-4">Dimensioni del busto</h3>
                 <div className="space-y-3">
@@ -137,37 +199,47 @@ export const Configurator = () => {
                 </div>
               </div>
 
-              {/* 2. Materiale */}
+              {/* 3. Materiale */}
               <div className="mb-8">
                 <h3 className="font-bold text-lg mb-4">Materiale del busto 3D</h3>
                 <div className="space-y-3">
-                  {Object.entries(materials).map(([key, value]) => (
-                    <div
-                      key={key}
-                      onClick={() => setSelectedMaterial(key as MaterialOption)}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
-                        selectedMaterial === key
-                          ? "border-virblack bg-virblack text-white scale-105"
-                          : "border-border bg-white hover:border-virgold hover:scale-102"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-bold">{key === "pla" ? "PLA eco (bioplastica)" : "Resina premium"}</span>
-                        {value.price > 0 && (
-                          <span className={`font-bold ${selectedMaterial === key ? "text-virgold" : ""}`}>
-                            +€{value.price.toFixed(2).replace(".", ",")}
-                          </span>
-                        )}
-                      </div>
-                      <p className={`text-xs ${selectedMaterial === key ? "text-white/60" : "text-muted-foreground"}`}>
-                        {value.description}
-                      </p>
+                  <div
+                    onClick={() => setSelectedMaterial("pla")}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
+                      selectedMaterial === "pla"
+                        ? "border-virblack bg-virblack text-white scale-105"
+                        : "border-border bg-white hover:border-virgold hover:scale-102"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold">PLA eco (bioplastica)</span>
                     </div>
-                  ))}
+                    <p className={`text-xs ${selectedMaterial === "pla" ? "text-white/60" : "text-muted-foreground"}`}>
+                      {materials.pla.description}
+                    </p>
+                  </div>
+                  <div
+                    onClick={() => setSelectedMaterial("resina")}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
+                      selectedMaterial === "resina"
+                        ? "border-virblack bg-virblack text-white scale-105"
+                        : "border-border bg-white hover:border-virgold hover:scale-102"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold">Resina premium</span>
+                      <span className={`font-bold ${selectedMaterial === "resina" ? "text-virgold" : ""}`}>
+                        +€{materials.resina.getPrice(sizes[selectedSize].price).toFixed(2).replace(".", ",")}
+                      </span>
+                    </div>
+                    <p className={`text-xs ${selectedMaterial === "resina" ? "text-white/60" : "text-muted-foreground"}`}>
+                      {materials.resina.description}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* 3. Add-ons */}
+              {/* 4. Add-ons */}
               <div className="mb-8">
                 <div className="flex items-start gap-3 cursor-pointer group">
                   <Checkbox
@@ -186,7 +258,7 @@ export const Configurator = () => {
                 </div>
               </div>
 
-              {/* 4. Finitura */}
+              {/* 5. Finitura */}
               <div className="mb-8">
                 <h3 className="font-bold text-lg mb-4">Finitura</h3>
                 <div className="grid grid-cols-2 gap-3">
@@ -228,7 +300,7 @@ export const Configurator = () => {
                 </div>
               </div>
 
-              {/* 5. Personalizzazione */}
+              {/* 6. Personalizzazione */}
               <div className="mb-8 space-y-4">
                 <div>
                   <Label htmlFor="engraving" className="text-sm font-bold mb-2 block">

@@ -28,7 +28,7 @@ export const TransformationSteps = () => {
             Da foto a scultura 3D personalizzata
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Nessuna competenza tecnica: ci occupiamo noi di trasformare le tue immagini in un <strong>busto 3D da foto</strong> pronto per essere esposto o regalato.
+            Che sia per un regalo San Valentino al tuo fidanzato, un compleanno speciale o un anniversario di matrimonio, il processo è sempre lo stesso: nessuna competenza tecnica necessaria. Ci occupiamo noi di trasformare le tue immagini in un <strong>busto 3D da foto</strong> pronto per essere esposto o regalato.
           </p>
         </div>
 
@@ -62,7 +62,7 @@ export const TransformationSteps = () => {
             </div>
             <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Carica le tue foto</h3>
             <p className="text-sm text-muted-foreground leading-relaxed px-4">
-              Carica da <strong>1 a 4 foto</strong> del soggetto (fronte, tre quarti, profilo se possibile).  
+              Carica da <strong>1 a 4 foto</strong> del soggetto (o della coppia per un <strong>regalo fidanzati romantico</strong>). Fronte, tre quarti, profilo se possibile.
               Più angolazioni ci dai, più il <strong>busto 3D personalizzato</strong> sarà fedele al ritratto.
             </p>
           </div>
