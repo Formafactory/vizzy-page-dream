@@ -98,7 +98,7 @@ export const FAQ = () => {
             variant="outline"
             size="lg"
             onClick={() => setShowAll(!showAll)}
-            className="group hover:border-virgold hover:text-virgold transition-all"
+            className="group bg-surface border-2 border-virgold/20 text-virblack font-semibold hover:bg-virgold hover:text-white hover:border-virgold hover:shadow-lg transition-all duration-300"
             aria-expanded={showAll}
             aria-label={showAll ? "Mostra meno FAQ" : "Mostra tutte le FAQ"}
           >
