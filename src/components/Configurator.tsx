@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { UserCheck, Camera, Award, ShoppingCart, CheckCircle, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { UserCheck, Camera, Award, ShoppingCart, CheckCircle, Heart, ArrowRight, ArrowLeft, Users, Ruler, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Progress } from "@/components/ui/progress";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import coupleBust from "@/assets/couple_bust_3d_romantic.png";
 import familyBust from "@/assets/family_bust_3d_group.png";
@@ -17,14 +17,29 @@ type MaterialOption = "pla" | "resina";
 type PeopleOption = "singola" | "coppia" | "famiglia";
 
 export const Configurator = () => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedPeople, setSelectedPeople] = useState<PeopleOption>("singola");
   const [selectedSize, setSelectedSize] = useState<SizeOption>("medio");
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialOption>("pla");
   const [includeShoulders, setIncludeShoulders] = useState(false);
   const [finishPrice, setFinishPrice] = useState(0);
+  const [selectedFinish, setSelectedFinish] = useState("bianco");
   const [previewImage, setPreviewImage] = useState(coupleBust);
   
   const { ref: configRef, isVisible: configVisible } = useScrollAnimation(0.1);
+
+  // Aggiorna preview dinamicamente in base alle selezioni
+  useEffect(() => {
+    if (selectedPeople === "coppia") {
+      setPreviewImage(coupleBust);
+    } else if (selectedPeople === "famiglia") {
+      setPreviewImage(familyBust);
+    } else if (selectedMaterial === "resina") {
+      setPreviewImage(resinDark);
+    } else {
+      setPreviewImage(giftValentine);
+    }
+  }, [selectedPeople, selectedMaterial]);
 
   const people = {
     singola: { multiplier: 0, description: "Un solo soggetto" },
@@ -64,288 +79,547 @@ export const Configurator = () => {
 
   const images = [coupleBust, resinDark, familyBust, giftValentine];
 
+  const progressSteps = [
+    { number: 1, label: "Per chi lo crei", icon: Users },
+    { number: 2, label: "Le dimensioni perfette", icon: Ruler },
+    { number: 3, label: "Materiale & stile", icon: Sparkles },
+    { number: 4, label: "Tocchi finali", icon: Heart },
+  ];
+
+  const trustBadgesByStep = {
+    1: [
+      { icon: Heart, text: "872 coppie lo hanno scelto questo mese", highlight: true },
+      { icon: Users, text: "Perfetto per anniversari e San Valentino" },
+    ],
+    2: [
+      { icon: Award, text: "15cm è il formato più richiesto", highlight: true },
+      { icon: Camera, text: "Dettagli nitidi anche nelle dimensioni piccole" },
+    ],
+    3: [
+      { icon: Sparkles, text: "Resina premium: 94% di clienti soddisfatti", highlight: true },
+      { icon: UserCheck, text: "Finiture curate a mano da artigiani italiani" },
+    ],
+    4: [
+      { icon: CheckCircle, text: "Spedizione gratuita sopra €100", highlight: true },
+      { icon: Award, text: "Garanzia soddisfatti o rimborsati" },
+    ],
+  };
+
+  const handleNextStep = () => {
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const getBasePrice = () => sizes[selectedSize].price;
+  const getPeopleExtra = () => getBasePrice() * people[selectedPeople].multiplier;
+  const getMaterialExtra = () => selectedMaterial === "resina" ? materials.resina.getPrice(getBasePrice()) : 0;
+  const getShouldersExtra = () => includeShoulders ? shouldersPrice : 0;
+
   return (
-    <section id="configurator" className="py-20 bg-surface">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section id="configurator" className="py-20 bg-gradient-to-b from-surface to-background">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div 
           ref={configRef}
-          className={`grid lg:grid-cols-12 gap-12 transition-all duration-1000 ${
+          className={`transition-all duration-1000 ${
             configVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
           
-          {/* Left Column: Product Preview */}
-          <div className="lg:col-span-7 lg:sticky lg:top-24 h-fit">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-border mb-6 hover-lift group">
-              <img 
-                src={previewImage} 
-                alt="Anteprima busto" 
-                className="w-full h-auto object-cover aspect-[4/3] transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((img, idx) => (
-                <img
-                  key={idx}
-                  onClick={() => setPreviewImage(img)}
-                  src={img}
-                  alt={`Anteprima ${idx + 1}`}
-                  className={`rounded-lg cursor-pointer border transition-all duration-300 hover:scale-105 hover-lift ${
-                    previewImage === img ? "border-virgold ring-2 ring-virgold" : "hover:border-virgold"
-                  }`}
-                />
-              ))}
-            </div>
+          {/* Header con Progress Emotivo */}
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-virblack via-virgold to-virblack bg-clip-text text-transparent">
+              Crea la tua scultura unica
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Immortala chi ami in una scultura 3D che durerà per sempre. Seguici passo dopo passo.
+            </p>
             
-            {/* Trust Signals */}
-            <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
-                <UserCheck className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">Somiglianza curata a mano</p>
+            {/* Progress Bar Narrativo */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="flex justify-between items-center mb-4">
+                {progressSteps.map((step) => {
+                  const StepIcon = step.icon;
+                  return (
+                    <div key={step.number} className="flex flex-col items-center flex-1 relative">
+                      <div 
+                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                          currentStep === step.number 
+                            ? "bg-virgold text-white scale-110 shadow-lg shadow-virgold/50" 
+                            : currentStep > step.number 
+                            ? "bg-virblack text-white" 
+                            : "bg-border text-muted-foreground"
+                        }`}
+                      >
+                        <StepIcon className="w-6 h-6" />
+                      </div>
+                      <p className={`text-xs mt-2 font-medium text-center transition-colors duration-300 ${
+                        currentStep === step.number ? "text-virgold font-bold" : "text-muted-foreground"
+                      }`}>
+                        {step.label}
+                      </p>
+                      {step.number < 4 && (
+                        <div className={`absolute top-6 left-[60%] w-full h-0.5 transition-all duration-500 ${
+                          currentStep > step.number ? "bg-virblack" : "bg-border"
+                        }`} style={{ zIndex: -1 }} />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
-                <Camera className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">Busto 3D da 1–4 foto</p>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
-                <Award className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">13 anni di stampa 3D</p>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
-                <Heart className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">Regalo romantico per coppie</p>
-              </div>
+              <Progress value={(currentStep / 4) * 100} className="h-2" />
             </div>
           </div>
 
-          {/* Right Column: Configuration Form */}
-          <div className="lg:col-span-5">
-            <div className="bg-transparent">
-              <h2 className="font-serif text-3xl font-bold mb-2">Configura il tuo busto 3D da foto</h2>
-              <p className="text-sm text-muted-foreground mb-3">
-                Compila i parametri principali: riceverai un <strong>preventivo preciso per il tuo busto 3D personalizzato</strong> in base a dimensione, materiale e finitura.
-              </p>
-              <div className="flex items-center gap-2 mb-8 text-sm text-green-700 bg-green-50 w-fit px-3 py-1 rounded-full border border-green-100">
-                <CheckCircle className="w-4 h-4" />
-                Made in Italy – spedizione busti 3D in tutta Europa
+          {/* Layout Principale */}
+          <div className="grid lg:grid-cols-12 gap-8">
+            
+            {/* Left: Preview Grande e Dinamico */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border border-border group">
+                <div className="absolute top-4 right-4 bg-virgold text-white px-3 py-1 rounded-full text-xs font-bold z-10 animate-pulse">
+                  Anteprima Live
+                </div>
+                <img 
+                  src={previewImage} 
+                  alt="Anteprima scultura" 
+                  className="w-full h-auto object-cover aspect-[4/3] transition-all duration-700 group-hover:scale-105"
+                />
+              </div>
+              
+              {/* Galleria Thumbnail */}
+              <div className="grid grid-cols-4 gap-3">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setPreviewImage(img)}
+                    className={`rounded-lg overflow-hidden border-2 transition-all duration-300 hover:scale-105 focus:outline-none ${
+                      previewImage === img 
+                        ? "border-virgold ring-2 ring-virgold shadow-lg" 
+                        : "border-transparent hover:border-virgold"
+                    }`}
+                  >
+                    <img src={img} alt={`Variante ${idx + 1}`} className="w-full h-auto aspect-square object-cover" />
+                  </button>
+                ))}
               </div>
 
-              {/* 1. Numero di Persone */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Numero di persone</h3>
-                <RadioGroup value={selectedPeople} onValueChange={(value) => setSelectedPeople(value as PeopleOption)}>
-                  <div className="space-y-3">
-                    {Object.entries(people).map(([key, value]) => (
-                      <div
-                        key={key}
-                        className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
-                          selectedPeople === key
-                            ? "border-virblack bg-virblack text-white scale-105"
-                            : "border-border bg-white hover:border-virgold hover:scale-102"
-                        }`}
-                        onClick={() => setSelectedPeople(key as PeopleOption)}
-                      >
-                        <div className="flex items-start gap-3">
-                          <RadioGroupItem 
-                            value={key} 
-                            id={key} 
-                            className={selectedPeople === key ? "border-virgold text-virgold" : ""}
-                          />
-                          <Label htmlFor={key} className="cursor-pointer flex-1">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="font-bold capitalize">{key}</span>
-                              {value.multiplier > 0 && (
-                                <span className={`font-bold text-sm ${selectedPeople === key ? "text-virgold" : ""}`}>
-                                  +{(value.multiplier * 100).toFixed(0)}%
+              {/* Price Breakdown Animato - Sempre Visibile */}
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-border space-y-3">
+                <h3 className="font-bold text-lg flex items-center gap-2 mb-4">
+                  <Sparkles className="w-5 h-5 text-virgold" />
+                  Riepilogo del tuo ordine
+                </h3>
+                
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Busto {selectedSize} ({sizes[selectedSize].height})</span>
+                    <span className="font-bold">€{getBasePrice().toFixed(2).replace(".", ",")}</span>
+                  </div>
+                  
+                  {selectedPeople !== "singola" && (
+                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
+                      <span className="text-muted-foreground capitalize">{selectedPeople} (+{(people[selectedPeople].multiplier * 100).toFixed(0)}%)</span>
+                      <span className="font-bold text-virgold">+€{getPeopleExtra().toFixed(2).replace(".", ",")}</span>
+                    </div>
+                  )}
+                  
+                  {selectedMaterial === "resina" && (
+                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
+                      <span className="text-muted-foreground">Resina premium (+30%)</span>
+                      <span className="font-bold text-virgold">+€{getMaterialExtra().toFixed(2).replace(".", ",")}</span>
+                    </div>
+                  )}
+                  
+                  {includeShoulders && (
+                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
+                      <span className="text-muted-foreground">Spalle e torace</span>
+                      <span className="font-bold text-virgold">+€{shouldersPrice.toFixed(2).replace(".", ",")}</span>
+                    </div>
+                  )}
+                  
+                  {finishPrice > 0 && (
+                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
+                      <span className="text-muted-foreground">Finitura speciale</span>
+                      <span className="font-bold text-virgold">+€{finishPrice.toFixed(2).replace(".", ",")}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t-2 border-virblack">
+                  <span className="text-lg font-bold">Totale</span>
+                  <span className="text-3xl font-bold text-virblack">€{calculateTotal().replace(".", ",")}</span>
+                </div>
+                
+                <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg">
+                  <CheckCircle className="w-4 h-4" />
+                  Made in Italy • Spedizione gratuita sopra €100
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Wizard Steps */}
+            <div className="lg:col-span-5">
+              <div className="bg-white rounded-xl shadow-xl p-8 border border-border min-h-[600px] flex flex-col">
+                
+                {/* Step 1: Chi */}
+                {currentStep === 1 && (
+                  <div className="animate-fade-in flex-1 flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="font-serif text-2xl font-bold mb-2">Per chi stai creando questa scultura?</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Scegli se immortalare una persona speciale o creare un ricordo di coppia o famiglia
+                      </p>
+                    </div>
+
+                    <div className="space-y-4 flex-1">
+                      {Object.entries(people).map(([key, value]) => {
+                        const isSelected = selectedPeople === key;
+                        const Icon = key === "singola" ? User : key === "coppia" ? Heart : Users;
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => setSelectedPeople(key as PeopleOption)}
+                            className={`w-full p-6 border-2 rounded-xl text-left transition-all duration-300 hover:scale-102 hover:shadow-lg ${
+                              isSelected
+                                ? "border-virgold bg-gradient-to-br from-virgold/10 to-virblack/5 shadow-lg scale-102"
+                                : "border-border hover:border-virgold"
+                            }`}
+                          >
+                            <div className="flex items-start gap-4">
+                              <div className={`p-3 rounded-lg ${isSelected ? "bg-virgold text-white" : "bg-surface"}`}>
+                                <Icon className="w-6 h-6" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="font-bold text-lg capitalize">{key}</span>
+                                  {value.multiplier > 0 && (
+                                    <span className="font-bold text-virgold">
+                                      +{(value.multiplier * 100).toFixed(0)}%
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {value.description}
+                                </p>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Trust Badges Contestuali */}
+                    <div className="mt-6 space-y-2">
+                      {trustBadgesByStep[1].map((badge, idx) => {
+                        const BadgeIcon = badge.icon;
+                        return (
+                          <div 
+                            key={idx}
+                            className={`flex items-center gap-2 text-xs p-2 rounded-lg ${
+                              badge.highlight ? "bg-virgold/10 text-virgold font-bold" : "text-muted-foreground"
+                            }`}
+                          >
+                            <BadgeIcon className="w-4 h-4" />
+                            {badge.text}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 2: Dimensioni */}
+                {currentStep === 2 && (
+                  <div className="animate-fade-in flex-1 flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="font-serif text-2xl font-bold mb-2">Che dimensioni preferisci?</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Ogni formato è perfetto: scegli in base a dove la esporrai
+                      </p>
+                    </div>
+
+                    <div className="space-y-4 flex-1">
+                      {Object.entries(sizes).map(([key, value]) => {
+                        const isSelected = selectedSize === key;
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => setSelectedSize(key as SizeOption)}
+                            className={`w-full p-6 border-2 rounded-xl text-left transition-all duration-300 hover:scale-102 hover:shadow-lg ${
+                              isSelected
+                                ? "border-virgold bg-gradient-to-br from-virgold/10 to-virblack/5 shadow-lg scale-102"
+                                : "border-border hover:border-virgold"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <span className="font-bold text-xl capitalize">{key}</span>
+                                <p className="text-xs text-muted-foreground mt-1">{value.height} di altezza</p>
+                              </div>
+                              <span className={`text-2xl font-bold ${isSelected ? "text-virgold" : "text-foreground"}`}>
+                                €{value.price.toFixed(2).replace(".", ",")}
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {value.description}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-6 space-y-2">
+                      {trustBadgesByStep[2].map((badge, idx) => {
+                        const BadgeIcon = badge.icon;
+                        return (
+                          <div 
+                            key={idx}
+                            className={`flex items-center gap-2 text-xs p-2 rounded-lg ${
+                              badge.highlight ? "bg-virgold/10 text-virgold font-bold" : "text-muted-foreground"
+                            }`}
+                          >
+                            <BadgeIcon className="w-4 h-4" />
+                            {badge.text}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Materiale & Finitura */}
+                {currentStep === 3 && (
+                  <div className="animate-fade-in flex-1 flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="font-serif text-2xl font-bold mb-2">Scegli materiale e stile</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Ogni materiale ha il suo carattere unico
+                      </p>
+                    </div>
+
+                    {/* Materiale */}
+                    <div className="space-y-3 mb-6">
+                      <h4 className="font-bold text-sm text-muted-foreground uppercase tracking-wide">Materiale</h4>
+                      {Object.entries(materials).map(([key, value]) => {
+                        const isSelected = selectedMaterial === key;
+                        const extraPrice = key === "resina" ? materials.resina.getPrice(sizes[selectedSize].price) : 0;
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => setSelectedMaterial(key as MaterialOption)}
+                            className={`w-full p-5 border-2 rounded-xl text-left transition-all duration-300 hover:scale-102 ${
+                              isSelected
+                                ? "border-virgold bg-gradient-to-br from-virgold/10 to-virblack/5 shadow-lg scale-102"
+                                : "border-border hover:border-virgold"
+                            }`}
+                          >
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="font-bold text-lg capitalize">
+                                {key === "pla" ? "PLA Eco" : "Resina Premium"}
+                              </span>
+                              {extraPrice > 0 && (
+                                <span className="font-bold text-virgold">
+                                  +€{extraPrice.toFixed(2).replace(".", ",")}
                                 </span>
                               )}
                             </div>
-                            <p className={`text-xs ${selectedPeople === key ? "text-white/70" : "text-muted-foreground"}`}>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                               {value.description}
                             </p>
-                          </Label>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
-              </div>
+                          </button>
+                        );
+                      })}
+                    </div>
 
-              {/* 2. Dimensioni */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Dimensioni del busto</h3>
-                <div className="space-y-3">
-                  {Object.entries(sizes).map(([key, value]) => (
-                    <div
-                      key={key}
-                      onClick={() => setSelectedSize(key as SizeOption)}
-                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
-                        selectedSize === key
-                          ? "border-virblack bg-virblack text-white scale-105"
-                          : "border-border bg-white hover:border-virgold hover:scale-102"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-bold capitalize">{key}</span>
-                        <span className={`font-bold ${selectedSize === key ? "text-virgold" : ""}`}>
-                          €{value.price.toFixed(2).replace(".", ",")}
-                        </span>
+                    {/* Finitura */}
+                    <div className="space-y-3 flex-1">
+                      <h4 className="font-bold text-sm text-muted-foreground uppercase tracking-wide">Colore e Finitura</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        {[
+                          { name: "Bianco Opaco", price: 0, color: "bg-white" },
+                          { name: "Grigio Scuro", price: 0, color: "bg-gray-700" },
+                          { name: "Grigio Chiaro", price: 0, color: "bg-gray-300" },
+                          { name: "Effetto Marmo", price: 5, color: "bg-gradient-to-br from-gray-200 to-gray-400" },
+                        ].map((finish) => (
+                          <button
+                            key={finish.name}
+                            onClick={() => {
+                              setFinishPrice(finish.price);
+                              setSelectedFinish(finish.name);
+                            }}
+                            className={`p-4 border-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+                              selectedFinish === finish.name
+                                ? "border-virgold shadow-lg scale-105"
+                                : "border-border hover:border-virgold"
+                            }`}
+                          >
+                            <div className={`w-full h-8 rounded mb-2 ${finish.color} border border-border`} />
+                            <p className="text-xs font-bold">{finish.name}</p>
+                            {finish.price > 0 && (
+                              <p className="text-xs text-virgold font-bold">+€{finish.price}</p>
+                            )}
+                          </button>
+                        ))}
+                        <button
+                          onClick={() => {
+                            setFinishPrice(10);
+                            setSelectedFinish("Effetto Legno");
+                          }}
+                          className={`col-span-2 p-4 border-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+                            selectedFinish === "Effetto Legno"
+                              ? "border-virgold shadow-lg scale-105"
+                              : "border-border hover:border-virgold"
+                          }`}
+                        >
+                          <div className="w-full h-8 rounded mb-2 bg-gradient-to-r from-amber-800 to-amber-600 border border-border" />
+                          <p className="text-xs font-bold">Effetto Legno</p>
+                          <p className="text-xs text-virgold font-bold">+€10</p>
+                        </button>
                       </div>
-                      <p className={`text-xs ${selectedSize === key ? "text-white/60" : "text-muted-foreground"}`}>
-                        {value.height} altezza • {value.description}
+                    </div>
+
+                    <div className="mt-6 space-y-2">
+                      {trustBadgesByStep[3].map((badge, idx) => {
+                        const BadgeIcon = badge.icon;
+                        return (
+                          <div 
+                            key={idx}
+                            className={`flex items-center gap-2 text-xs p-2 rounded-lg ${
+                              badge.highlight ? "bg-virgold/10 text-virgold font-bold" : "text-muted-foreground"
+                            }`}
+                          >
+                            <BadgeIcon className="w-4 h-4" />
+                            {badge.text}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 4: Personalizza */}
+                {currentStep === 4 && (
+                  <div className="animate-fade-in flex-1 flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="font-serif text-2xl font-bold mb-2">Gli ultimi tocchi personali</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Rendi la tua scultura ancora più unica e speciale
                       </p>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* 3. Materiale */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Materiale del busto 3D</h3>
-                <div className="space-y-3">
-                  <div
-                    onClick={() => setSelectedMaterial("pla")}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
-                      selectedMaterial === "pla"
-                        ? "border-virblack bg-virblack text-white scale-105"
-                        : "border-border bg-white hover:border-virgold hover:scale-102"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold">PLA eco (bioplastica)</span>
+                    <div className="space-y-6 flex-1">
+                      {/* Spalle */}
+                      <button
+                        onClick={() => setIncludeShoulders(!includeShoulders)}
+                        className={`w-full p-5 border-2 rounded-xl text-left transition-all duration-300 hover:scale-102 ${
+                          includeShoulders
+                            ? "border-virgold bg-gradient-to-br from-virgold/10 to-virblack/5 shadow-lg"
+                            : "border-border hover:border-virgold"
+                        }`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <Checkbox checked={includeShoulders} className="mt-1" />
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="font-bold text-lg">Includi spalle e torace</span>
+                              <span className="font-bold text-virgold">+€{shouldersPrice.toFixed(2).replace(".", ",")}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Una scultura più completa e imponente, simile a una statua commemorativa
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+
+                      {/* Incisione */}
+                      <div>
+                        <Label htmlFor="engraving" className="font-bold text-sm mb-2 block">
+                          Incisione sulla base (opzionale)
+                        </Label>
+                        <Input
+                          id="engraving"
+                          placeholder="Es: 'Sempre insieme' o 'Per sempre nel cuore'"
+                          className="focus-visible:ring-virgold transition-all duration-300"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Un messaggio che renderà il regalo ancora più emozionante
+                        </p>
+                      </div>
+
+                      {/* Note */}
+                      <div>
+                        <Label htmlFor="notes" className="font-bold text-sm mb-2 block">
+                          Note speciali per l'artista (opzionale)
+                        </Label>
+                        <Textarea
+                          id="notes"
+                          placeholder="Es: 'Enfatizzare il sorriso', 'Includere gli occhiali', 'Stile elegante e romantico'..."
+                          className="h-24 resize-none focus-visible:ring-virgold transition-all duration-300"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Aiutaci a catturare ogni dettaglio importante per te
+                        </p>
+                      </div>
                     </div>
-                    <p className={`text-xs ${selectedMaterial === "pla" ? "text-white/60" : "text-muted-foreground"}`}>
-                      {materials.pla.description}
-                    </p>
-                  </div>
-                  <div
-                    onClick={() => setSelectedMaterial("resina")}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 hover-lift ${
-                      selectedMaterial === "resina"
-                        ? "border-virblack bg-virblack text-white scale-105"
-                        : "border-border bg-white hover:border-virgold hover:scale-102"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold">Resina premium</span>
-                      <span className={`font-bold ${selectedMaterial === "resina" ? "text-virgold" : ""}`}>
-                        +€{materials.resina.getPrice(sizes[selectedSize].price).toFixed(2).replace(".", ",")}
-                      </span>
+
+                    <div className="mt-6 space-y-2">
+                      {trustBadgesByStep[4].map((badge, idx) => {
+                        const BadgeIcon = badge.icon;
+                        return (
+                          <div 
+                            key={idx}
+                            className={`flex items-center gap-2 text-xs p-2 rounded-lg ${
+                              badge.highlight ? "bg-virgold/10 text-virgold font-bold" : "text-muted-foreground"
+                            }`}
+                          >
+                            <BadgeIcon className="w-4 h-4" />
+                            {badge.text}
+                          </div>
+                        );
+                      })}
                     </div>
-                    <p className={`text-xs ${selectedMaterial === "resina" ? "text-white/60" : "text-muted-foreground"}`}>
-                      {materials.resina.description}
-                    </p>
                   </div>
+                )}
+
+                {/* Navigation Buttons */}
+                <div className="flex gap-3 mt-8 pt-6 border-t border-border">
+                  {currentStep > 1 && (
+                    <Button
+                      variant="outline"
+                      onClick={handlePrevStep}
+                      className="flex-1 hover:border-virgold transition-all duration-300 hover:scale-105"
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Indietro
+                    </Button>
+                  )}
+                  {currentStep < 4 ? (
+                    <Button
+                      onClick={handleNextStep}
+                      className="flex-1 bg-virgold hover:bg-virgold-dark transition-all duration-300 hover:scale-105 shadow-lg"
+                    >
+                      Continua
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button
+                      className="flex-1 bg-virblack hover:bg-virblack/90 text-white transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-virgold/30"
+                    >
+                      <ShoppingCart className="w-5 h-5 mr-2" />
+                      Acquista ora
+                    </Button>
+                  )}
                 </div>
               </div>
-
-              {/* 4. Add-ons */}
-              <div className="mb-8">
-                <div className="flex items-start gap-3 cursor-pointer group">
-                  <Checkbox
-                    id="shoulders"
-                    checked={includeShoulders}
-                    onCheckedChange={(checked) => setIncludeShoulders(checked as boolean)}
-                  />
-                  <Label htmlFor="shoulders" className="cursor-pointer">
-                    <span className="font-bold text-foreground group-hover:text-virgold transition-colors">
-                      Includi spalle e torace +€{shouldersPrice.toFixed(2).replace(".", ",")}
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Trasforma il mezzobusto in una scultura più completa, simile a una piccola statua 3D personalizzata
-                    </p>
-                  </Label>
-                </div>
-              </div>
-
-              {/* 5. Finitura */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Finitura</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setFinishPrice(0)}
-                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white transition-all duration-300 hover:scale-105"
-                  >
-                    Bianco Opaco
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setFinishPrice(0)}
-                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white"
-                  >
-                    Grigio Scuro
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setFinishPrice(0)}
-                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white"
-                  >
-                    Grigio Chiaro
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setFinishPrice(5)}
-                    className="hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white"
-                  >
-                    Effetto Marmo +€5
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setFinishPrice(10)}
-                    className="col-span-2 hover:border-virgold focus:border-virblack focus:bg-virblack focus:text-white"
-                  >
-                    Effetto Legno +€10
-                  </Button>
-                </div>
-              </div>
-
-              {/* 6. Personalizzazione */}
-              <div className="mb-8 space-y-4">
-                <div>
-                  <Label htmlFor="engraving" className="text-sm font-bold mb-2 block">
-                    Incisione sulla base (opzionale)
-                  </Label>
-                  <Input
-                    id="engraving"
-                    placeholder="Es: In memoria di Nonno Giuseppe • 1935–2023"
-                    className="focus-visible:ring-virgold"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="notes" className="text-sm font-bold mb-2 block">
-                    Note per l'artista (opzionale)
-                  </Label>
-                  <Textarea
-                    id="notes"
-                    placeholder="Es: enfatizzare il sorriso, includere gli occhiali, scultura 3D con look elegante..."
-                    className="h-24 resize-none focus-visible:ring-virgold"
-                  />
-                </div>
-              </div>
-
-              {/* Sticky Bottom Total */}
-              <div className="sticky bottom-4 bg-white p-6 rounded-xl shadow-2xl border border-border z-30 hover-lift">
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <p className="text-3xl font-bold text-virblack transition-all duration-300">
-                      €{calculateTotal().replace(".", ",")}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                      Busto 3D personalizzato da foto • mezzobusto in stampa 3D
-                    </p>
-                  </div>
-                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded animate-pulse">
-                    Made in Italy
-                  </span>
-                </div>
-                <Button className="w-full bg-virgold-dark hover:bg-virgold-dark/90 text-white font-bold py-4 text-lg uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-virgold/30 group">
-                  <ShoppingCart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" /> 
-                  Acquista ora il tuo busto
-                </Button>
-              </div>
-
             </div>
+
           </div>
         </div>
       </div>
