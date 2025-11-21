@@ -515,29 +515,6 @@ export const Configurator = () => {
                     </div>
 
                     <div className="space-y-6 flex-1">
-                      {/* Spalle */}
-                      <button
-                        onClick={() => setIncludeShoulders(!includeShoulders)}
-                        className={`w-full p-5 border-2 rounded-xl text-left transition-all duration-300 hover:scale-102 ${
-                          includeShoulders
-                            ? "border-virgold bg-gradient-to-br from-virgold/10 to-virblack/5 shadow-lg"
-                            : "border-border hover:border-virgold"
-                        }`}
-                      >
-                        <div className="flex items-start gap-4">
-                          <Checkbox checked={includeShoulders} className="mt-1" />
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="font-bold text-lg">Includi spalle e torace</span>
-                              <span className="font-bold text-virgold">+€{shouldersPrice.toFixed(2).replace(".", ",")}</span>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              Una scultura più completa e imponente, simile a una statua commemorativa
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-
                       {/* Incisione */}
                       <div>
                         <Label htmlFor="engraving" className="font-bold text-sm mb-2 block">
