@@ -1,13 +1,17 @@
+import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ChevronDown } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 export const FAQ = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
+  const [showAll, setShowAll] = useState(false);
 
   const faqs = [
     {
@@ -73,11 +77,11 @@ export const FAQ = () => {
         </div>
 
         <Accordion type="single" collapsible className="space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs.slice(0, showAll ? faqs.length : 2).map((faq, index) => (
             <AccordionItem 
               key={index} 
               value={`item-${index}`}
-              className="bg-surface border border-border rounded-lg px-4 hover-lift"
+              className="bg-surface border border-border rounded-lg px-4 hover-lift animate-fade-in"
             >
               <AccordionTrigger className="text-left text-sm font-semibold hover:text-virgold transition-colors py-4">
                 {faq.question}
@@ -88,6 +92,24 @@ export const FAQ = () => {
             </AccordionItem>
           ))}
         </Accordion>
+
+        <div className="flex justify-center mt-8">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => setShowAll(!showAll)}
+            className="group hover:border-virgold hover:text-virgold transition-all"
+            aria-expanded={showAll}
+            aria-label={showAll ? "Mostra meno FAQ" : "Mostra tutte le FAQ"}
+          >
+            {showAll ? "Mostra meno" : "Mostra tutte le FAQ"}
+            <ChevronDown 
+              className={`ml-2 h-4 w-4 transition-transform duration-300 ${
+                showAll ? "rotate-180" : ""
+              }`}
+            />
+          </Button>
+        </div>
       </div>
     </section>
   );
