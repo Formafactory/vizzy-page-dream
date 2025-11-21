@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import coupleBust from "@/assets/couple_bust_3d_romantic.png";
 import familyBust from "@/assets/family_bust_3d_group.png";
@@ -141,39 +140,50 @@ export const Configurator = () => {
               Immortala chi ami in una scultura 3D che durerà per sempre. Seguici passo dopo passo.
             </p>
             
-            {/* Progress Bar Narrativo */}
+            {/* Progress Bar Navigabile */}
             <div className="max-w-4xl mx-auto mb-8">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center">
                 {progressSteps.map((step) => {
                   const StepIcon = step.icon;
+                  const isCompleted = currentStep > step.number;
+                  const isCurrent = currentStep === step.number;
+                  
                   return (
-                    <div key={step.number} className="flex flex-col items-center flex-1 relative">
+                    <button
+                      key={step.number}
+                      onClick={() => setCurrentStep(step.number)}
+                      className="flex flex-col items-center flex-1 relative group cursor-pointer focus:outline-none"
+                    >
                       <div 
                         className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-                          currentStep === step.number 
+                          isCurrent
                             ? "bg-virgold text-white scale-110 shadow-lg shadow-virgold/50" 
-                            : currentStep > step.number 
-                            ? "bg-virblack text-white" 
-                            : "bg-border text-muted-foreground"
+                            : isCompleted
+                            ? "bg-virblack text-white hover:scale-105" 
+                            : "bg-border text-muted-foreground hover:bg-muted"
                         }`}
                       >
                         <StepIcon className="w-6 h-6" />
                       </div>
                       <p className={`text-xs mt-2 font-medium text-center transition-colors duration-300 ${
-                        currentStep === step.number ? "text-virgold font-bold" : "text-muted-foreground"
+                        isCurrent ? "text-virgold font-bold" : isCompleted ? "text-virblack" : "text-muted-foreground"
                       }`}>
                         {step.label}
                       </p>
                       {step.number < 4 && (
                         <div className={`absolute top-6 left-[60%] w-full h-0.5 transition-all duration-500 ${
-                          currentStep > step.number ? "bg-virblack" : "bg-border"
+                          isCompleted ? "bg-virblack" : "bg-border"
                         }`} style={{ zIndex: -1 }} />
                       )}
-                    </div>
+                      
+                      {/* Barra sotto lo step corrente */}
+                      {isCurrent && (
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-full h-1 bg-virgold rounded-full animate-fade-in" />
+                      )}
+                    </button>
                   );
                 })}
               </div>
-              <Progress value={(currentStep / 4) * 100} className="h-2" />
             </div>
           </div>
 
