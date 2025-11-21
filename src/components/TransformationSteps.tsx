@@ -103,7 +103,7 @@ export const TransformationSteps = () => {
               step3Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
           >
-            <div className="bg-white p-2 rounded-full w-40 h-40 mx-auto mb-6 shadow-xl relative z-10 group-hover:scale-110 transition-all duration-500 border border-border hover-lift animate-float">
+            <div className="bg-white p-2 rounded-full w-40 h-40 mx-auto mb-6 shadow-xl relative z-10 group-hover:scale-110 transition-all duration-500 border border-border hover-lift">
               <div className="w-full h-full rounded-full overflow-hidden bg-muted relative">
                 <img 
                   src={marbleBust} 
