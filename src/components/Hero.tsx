@@ -22,15 +22,17 @@ export const Hero = () => {
           }`}
         >
           <h1 className="font-serif text-4xl lg:text-6xl font-bold leading-tight mb-6 text-virblack">
-            Busto 3D personalizzato<br />
-            <span className="text-virgold-dark italic text-shimmer">realizzato dalle tue foto.</span>
+            Busto 3D personalizzato da foto<br />
+            <span className="text-virgold-dark italic text-shimmer">Regalo originale per fidanzati, compleanni e anniversari</span>
           </h1>
           <p className="text-lg text-muted-foreground mb-4 max-w-lg">
             Mezzobusto in stampa 3D creato da <strong>1–4 foto del volto</strong>, scolpito digitalmente dai nostri artisti e stampato in <strong>PLA eco</strong> o <strong>resina premium</strong>.
           </p>
-          <p className="text-sm text-muted-foreground mb-8 max-w-lg">
-            Perfetto come <strong>scultura 3D commemorativa</strong>, statua 3D personalizzata da regalare o busto-ritratto da esporre in casa o in studio.
-            Tempi medi: <strong>7–14 giorni lavorativi</strong>, spedizione in tutta Europa.
+          <p className="text-sm text-muted-foreground mb-3 max-w-lg">
+            Perfetto come <strong>regalo San Valentino, compleanno fidanzato/a, anniversario di matrimonio</strong> o scultura commemorativa. Disponibile anche in <strong>versione coppia o famiglia</strong>.
+          </p>
+          <p className="text-xs text-muted-foreground mb-8 max-w-lg">
+            Tempi: <strong>7–14 giorni lavorativi</strong> • Spedizione Europa • Made in Italy
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
@@ -64,8 +66,8 @@ export const Hero = () => {
               <Trophy className="w-6 h-6 text-orange-500" />
             </div>
             <div>
-              <p className="text-xs font-bold text-virblack">Somiglianza da ritratto 3D</p>
-              <p className="text-[10px] text-muted-foreground">Busto 3D creato a partire da semplici foto</p>
+              <p className="text-xs font-bold text-virblack">Il regalo più originale e romantico del 2025</p>
+              <p className="text-[10px] text-muted-foreground">Busto 3D personalizzato da foto per coppie, fidanzati, famiglie</p>
             </div>
           </div>
         </div>

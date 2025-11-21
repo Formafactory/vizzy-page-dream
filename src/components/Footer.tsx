@@ -6,7 +6,7 @@ export const Footer = () => {
           Vir3D<span className="text-xs align-top">™</span>
         </p>
         <p className="text-gray-500 text-sm">
-          © 2025 Vir3D Italia. Busti 3D personalizzati da foto • Sculture e statue 3D su misura.
+          © 2025 Vir3D Italia. Busti 3D personalizzati da foto • Regali originali per fidanzati, San Valentino, compleanni e anniversari • Sculture coppia e famiglia
         </p>
       </div>
     </footer>
