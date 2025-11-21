@@ -224,16 +224,13 @@ export const Configurator = () => {
                 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between items-center py-2 border-b border-border/50">
-                    <span className="text-muted-foreground">Busto {selectedSize} ({sizes[selectedSize].height})</span>
-                    <span className="font-bold">€{getBasePrice().toFixed(2).replace(".", ",")}</span>
+                    <span className="text-muted-foreground">
+                      Busto {selectedSize} ({sizes[selectedSize].height}) - {selectedPeople}
+                    </span>
+                    <span className="font-bold">
+                      €{(getBasePrice() + getPeopleExtra()).toFixed(2).replace(".", ",")}
+                    </span>
                   </div>
-                  
-                  {selectedPeople !== "singola" && (
-                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
-                      <span className="text-muted-foreground capitalize">{selectedPeople} (+{(people[selectedPeople].multiplier * 100).toFixed(0)}%)</span>
-                      <span className="font-bold text-virgold">+€{getPeopleExtra().toFixed(2).replace(".", ",")}</span>
-                    </div>
-                  )}
                   
                   {selectedMaterial === "resina" && (
                     <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
@@ -280,6 +277,9 @@ export const Configurator = () => {
                       {Object.entries(people).map(([key, value]) => {
                         const isSelected = selectedPeople === key;
                         const Icon = key === "singola" ? User : key === "coppia" ? Heart : Users;
+                        const basePrice = sizes[selectedSize].price;
+                        const finalPrice = basePrice + (basePrice * value.multiplier);
+                        
                         return (
                           <button
                             key={key}
@@ -297,11 +297,9 @@ export const Configurator = () => {
                               <div className="flex-1">
                                 <div className="flex justify-between items-center mb-2">
                                   <span className="font-bold text-lg capitalize">{key}</span>
-                                  {value.multiplier > 0 && (
-                                    <span className="font-bold text-virgold">
-                                      +{(value.multiplier * 100).toFixed(0)}%
-                                    </span>
-                                  )}
+                                  <span className={`text-2xl font-bold ${isSelected ? "text-virgold" : "text-foreground"}`}>
+                                    €{finalPrice.toFixed(2).replace(".", ",")}
+                                  </span>
                                 </div>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                   {value.description}
