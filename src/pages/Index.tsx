@@ -3,6 +3,7 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { TransformationSteps } from "@/components/TransformationSteps";
 import { Configurator } from "@/components/Configurator";
+import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
       <Hero />
       <TransformationSteps />
       <Configurator />
+      <FAQ />
       <Footer />
     </div>
   );
