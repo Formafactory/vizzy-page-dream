@@ -1,8 +1,8 @@
 import { Upload, Box, Award, ArrowRight } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import photoRef from "@/assets/photo-reference.jpg";
-import wireframe from "@/assets/wireframe-model.jpg";
-import marbleBust from "@/assets/marble-bust.jpg";
+import photoRef from "@/assets/real_photo_1.png";
+import wireframe from "@/assets/gallery_bust_wireframe.png";
+import marbleBust from "@/assets/gallery_bust_marble_detail.png";
 
 export const TransformationSteps = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation(0.2);
@@ -22,13 +22,13 @@ export const TransformationSteps = () => {
           }`}
         >
           <span className="text-virgold font-bold tracking-widest text-xs uppercase mb-2 block">
-            Il Processo
+            Come funziona
           </span>
           <h2 className="font-serif text-4xl font-bold mb-4 text-virblack">
-            La Metamorfosi
+            Da foto a scultura 3D personalizzata
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Tre semplici passi per trasformare un'immagine digitale in un'opera d'arte tangibile che durerà per sempre.
+            Nessuna competenza tecnica: ci occupiamo noi di trasformare le tue immagini in un <strong>busto 3D da foto</strong> pronto per essere esposto o regalato.
           </p>
         </div>
 
@@ -60,9 +60,10 @@ export const TransformationSteps = () => {
                 1
               </div>
             </div>
-            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Carica la Foto</h3>
+            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Carica le tue foto</h3>
             <p className="text-sm text-muted-foreground leading-relaxed px-4">
-              Scegli una foto frontale ben illuminata. Il nostro algoritmo, guidato da artisti esperti, analizzerà i tratti somatici.
+              Carica da <strong>1 a 4 foto</strong> del soggetto (fronte, tre quarti, profilo se possibile).  
+              Più angolazioni ci dai, più il <strong>busto 3D personalizzato</strong> sarà fedele al ritratto.
             </p>
           </div>
 
@@ -88,9 +89,10 @@ export const TransformationSteps = () => {
                 2
               </div>
             </div>
-            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Modellazione 3D</h3>
+            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Scultura 3D digitale</h3>
             <p className="text-sm text-muted-foreground leading-relaxed px-4">
-              Creiamo un modello digitale ad alta fedeltà. Ogni dettaglio viene scolpito virtualmente per garantire una somiglianza del 95%.
+              I nostri artisti 3D scolpiscono virtualmente il volto e il mezzobusto, creando una <strong>scultura 3D personalizzata</strong> pronta per la stampa.
+              Lavoriamo su proporzioni, espressione e dettagli.
             </p>
           </div>
 
@@ -113,9 +115,10 @@ export const TransformationSteps = () => {
                 3
               </div>
             </div>
-            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Stampa & Finitura</h3>
+            <h3 className="font-serif font-bold text-xl mb-3 text-virblack group-hover:text-virgold transition-colors duration-300">Stampa 3D & finitura</h3>
             <p className="text-sm text-muted-foreground leading-relaxed px-4">
-              Stampiamo in alta definizione e rifiniamo a mano. Scegli tra effetto marmo, legno o resina pura.
+              Stampiamo il busto in <strong>PLA eco</strong> o <strong>resina premium</strong>, rifiniamo le superfici e applichiamo eventuali finiture 
+              (bianco opaco, effetto marmo, effetto legno) per un risultato da galleria.
             </p>
           </div>
         </div>
@@ -125,7 +128,7 @@ export const TransformationSteps = () => {
             href="#configurator" 
             className="inline-flex items-center gap-2 text-virgold font-bold hover:text-virgold/80 transition-all duration-300 border-b-2 border-virgold pb-1 hover:gap-3 group"
           >
-            Inizia la tua creazione 
+            Inizia ora il tuo busto 3D da foto 
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
           </a>
         </div>

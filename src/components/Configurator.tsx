@@ -24,14 +24,14 @@ export const Configurator = () => {
   const { ref: configRef, isVisible: configVisible } = useScrollAnimation(0.1);
 
   const sizes = {
-    piccolo: { price: 53.90, height: "10cm", description: "Formato compatto" },
-    medio: { price: 62.90, height: "15cm", description: "Formato classico" },
-    grande: { price: 79.90, height: "20cm", description: "Presenza importante" },
+    piccolo: { price: 53.90, height: "10cm", description: "Busto 3D compatto perfetto come statuetta da scrivania" },
+    medio: { price: 62.90, height: "15cm", description: "Il nostro formato più richiesto per ritratti e busti commemorativi" },
+    grande: { price: 79.90, height: "20cm", description: "Scultura 3D d'impatto per uffici, studi o salotti" },
   };
 
   const materials = {
-    pla: { price: 0, description: "Dettagli superiori, finitura liscia (predefinito)" },
-    resina: { price: 12.58, description: "Dettagli del volto ultra-precisi (+20%)" },
+    pla: { price: 0, description: "Bioplastica derivata da fonti rinnovabili. Ideale per un busto 3D personalizzato economico ma di qualità, leggero e resistente" },
+    resina: { price: 12.58, description: "Per chi cerca un busto 3D professionale: dettagli ultra-definiti, superfici lisce e resa perfetta per sculture commemorative di pregio" },
   };
 
   const shouldersPrice = 10.80;
@@ -84,15 +84,15 @@ export const Configurator = () => {
             <div className="mt-8 grid grid-cols-3 gap-4 text-center">
               <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
                 <UserCheck className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">Somiglianza 95%</p>
+                <p className="text-xs font-bold">Somiglianza curata a mano</p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
                 <Camera className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">8-12 Foto</p>
+                <p className="text-xs font-bold">Busto 3D da 1–4 foto</p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm hover-lift group transition-all duration-300">
                 <Award className="w-6 h-6 mx-auto mb-2 text-virgold group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-xs font-bold">13 Anni Exp.</p>
+                <p className="text-xs font-bold">13 anni di stampa 3D</p>
               </div>
             </div>
           </div>
@@ -100,15 +100,18 @@ export const Configurator = () => {
           {/* Right Column: Configuration Form */}
           <div className="lg:col-span-5">
             <div className="bg-transparent">
-              <h2 className="font-serif text-3xl font-bold mb-2">Configura il tuo Busto</h2>
+              <h2 className="font-serif text-3xl font-bold mb-2">Configura il tuo busto 3D da foto</h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                Compila i parametri principali: riceverai un <strong>preventivo preciso per il tuo busto 3D personalizzato</strong> in base a dimensione, materiale e finitura.
+              </p>
               <div className="flex items-center gap-2 mb-8 text-sm text-green-700 bg-green-50 w-fit px-3 py-1 rounded-full border border-green-100">
                 <CheckCircle className="w-4 h-4" />
-                Prodotto artigianale Made in Italy
+                Made in Italy – spedizione busti 3D in tutta Europa
               </div>
 
               {/* 1. Dimensioni */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Dimensioni del Busto</h3>
+                <h3 className="font-bold text-lg mb-4">Dimensioni del busto</h3>
                 <div className="space-y-3">
                   {Object.entries(sizes).map(([key, value]) => (
                     <div
@@ -136,7 +139,7 @@ export const Configurator = () => {
 
               {/* 2. Materiale */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">Materiale</h3>
+                <h3 className="font-bold text-lg mb-4">Materiale del busto 3D</h3>
                 <div className="space-y-3">
                   {Object.entries(materials).map(([key, value]) => (
                     <div
@@ -149,7 +152,7 @@ export const Configurator = () => {
                       }`}
                     >
                       <div className="flex justify-between items-center mb-1">
-                        <span className="font-bold">{key === "pla" ? "PLA Premium" : "Resina DLP"}</span>
+                        <span className="font-bold">{key === "pla" ? "PLA eco (bioplastica)" : "Resina premium"}</span>
                         {value.price > 0 && (
                           <span className={`font-bold ${selectedMaterial === key ? "text-virgold" : ""}`}>
                             +€{value.price.toFixed(2).replace(".", ",")}
@@ -174,10 +177,10 @@ export const Configurator = () => {
                   />
                   <Label htmlFor="shoulders" className="cursor-pointer">
                     <span className="font-bold text-foreground group-hover:text-virgold transition-colors">
-                      Includi Spalle e Torace +€{shouldersPrice.toFixed(2).replace(".", ",")}
+                      Includi spalle e torace +€{shouldersPrice.toFixed(2).replace(".", ",")}
                     </span>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Maggiore presenza e impatto visivo, stile più completo
+                      Trasforma il mezzobusto in una scultura più completa, simile a una piccola statua 3D personalizzata
                     </p>
                   </Label>
                 </div>
@@ -229,21 +232,21 @@ export const Configurator = () => {
               <div className="mb-8 space-y-4">
                 <div>
                   <Label htmlFor="engraving" className="text-sm font-bold mb-2 block">
-                    Incisione sulla Base (Opzionale)
+                    Incisione sulla base (opzionale)
                   </Label>
                   <Input
                     id="engraving"
-                    placeholder="Es: In memoria di Nonno Giuseppe • 1935-2023"
+                    placeholder="Es: In memoria di Nonno Giuseppe • 1935–2023"
                     className="focus-visible:ring-virgold"
                   />
                 </div>
                 <div>
                   <Label htmlFor="notes" className="text-sm font-bold mb-2 block">
-                    Note per l'Artista (Opzionale)
+                    Note per l'artista (opzionale)
                   </Label>
                   <Textarea
                     id="notes"
-                    placeholder="Es: Enfatizzare il sorriso, includere gli occhiali..."
+                    placeholder="Es: enfatizzare il sorriso, includere gli occhiali, scultura 3D con look elegante..."
                     className="h-24 resize-none focus-visible:ring-virgold"
                   />
                 </div>
@@ -257,16 +260,16 @@ export const Configurator = () => {
                       €{calculateTotal().replace(".", ",")}
                     </p>
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                      Somiglianza garantita • Arte personalizzata
+                      Busto 3D personalizzato da foto • mezzobusto in stampa 3D
                     </p>
                   </div>
                   <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded animate-pulse">
-                    Arte Italiana
+                    Made in Italy
                   </span>
                 </div>
                 <Button className="w-full bg-virgold-dark hover:bg-virgold-dark/90 text-white font-bold py-4 text-lg uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-virgold/30 group">
                   <ShoppingCart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" /> 
-                  Acquista Ora
+                  Acquista ora il tuo busto
                 </Button>
               </div>
 

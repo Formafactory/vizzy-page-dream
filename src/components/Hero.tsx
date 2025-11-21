@@ -22,11 +22,15 @@ export const Hero = () => {
           }`}
         >
           <h1 className="font-serif text-4xl lg:text-6xl font-bold leading-tight mb-6 text-virblack">
-            Il Tuo Ricordo, <br />
-            <span className="text-virgold-dark italic text-shimmer">Scolpito per Sempre.</span>
+            Busto 3D personalizzato<br />
+            <span className="text-virgold-dark italic text-shimmer">realizzato dalle tue foto.</span>
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-            Trasforma una semplice foto in un mezzobusto 3D d'autore. Artigianato digitale italiano, spedito in 48h.
+          <p className="text-lg text-muted-foreground mb-4 max-w-lg">
+            Mezzobusto in stampa 3D creato da <strong>1–4 foto del volto</strong>, scolpito digitalmente dai nostri artisti e stampato in <strong>PLA eco</strong> o <strong>resina premium</strong>.
+          </p>
+          <p className="text-sm text-muted-foreground mb-8 max-w-lg">
+            Perfetto come <strong>scultura 3D commemorativa</strong>, statua 3D personalizzata da regalare o busto-ritratto da esporre in casa o in studio.
+            Tempi medi: <strong>7–14 giorni lavorativi</strong>, spedizione in tutta Europa.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
@@ -34,11 +38,11 @@ export const Hero = () => {
               size="lg"
               className="bg-virgold-dark hover:bg-virgold-dark/90 text-white font-semibold uppercase tracking-wider shadow-lg shadow-virgold/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-virgold/30"
             >
-              <a href="#configurator">Configura il tuo Busto</a>
+              <a href="#configurator">Configura il tuo busto 3D</a>
             </Button>
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
               <Star className="w-4 h-4 text-virgold fill-virgold animate-pulse" />
-              4.9/5 da 1200+ clienti
+              4.9/5 su 1200+ sculture personalizzate
             </div>
           </div>
         </div>
@@ -60,8 +64,8 @@ export const Hero = () => {
               <Trophy className="w-6 h-6 text-orange-500" />
             </div>
             <div>
-              <p className="text-xs font-bold text-virblack">"Somiglianza Incredibile"</p>
-              <p className="text-[10px] text-muted-foreground">Famiglia Rossi - Cliente Verificato</p>
+              <p className="text-xs font-bold text-virblack">Somiglianza da ritratto 3D</p>
+              <p className="text-[10px] text-muted-foreground">Busto 3D creato a partire da semplici foto</p>
             </div>
           </div>
         </div>

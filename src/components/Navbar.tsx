@@ -14,13 +14,16 @@ export const Navbar = () => {
         
         <div className="hidden md:flex items-center gap-8">
           <a href="#prodotto" className="text-sm font-medium hover:text-virgold transition-colors">
-            Il Prodotto
+            Busto 3D da foto
           </a>
           <a href="#trasformazione" className="text-sm font-medium hover:text-virgold transition-colors">
             Come Funziona
           </a>
           <a href="#configurator" className="text-sm font-medium hover:text-virgold transition-colors">
             Configura
+          </a>
+          <a href="#faq" className="text-sm font-medium hover:text-virgold transition-colors">
+            FAQ
           </a>
         </div>
 
@@ -37,10 +40,13 @@ export const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-border p-4">
           <a href="#configurator" className="block py-2 font-bold text-virgold" onClick={() => setMobileMenuOpen(false)}>
-            Configura Ora
+            Configura il busto 3D
           </a>
           <a href="#trasformazione" className="block py-2" onClick={() => setMobileMenuOpen(false)}>
             Come Funziona
+          </a>
+          <a href="#faq" className="block py-2" onClick={() => setMobileMenuOpen(false)}>
+            FAQ busto 3D
           </a>
         </div>
       )}
