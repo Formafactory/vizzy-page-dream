@@ -20,7 +20,6 @@ export const Configurator = () => {
   const [selectedPeople, setSelectedPeople] = useState<PeopleOption>("singola");
   const [selectedSize, setSelectedSize] = useState<SizeOption>("medio");
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialOption>("pla");
-  const [includeShoulders, setIncludeShoulders] = useState(false);
   const [finishPrice, setFinishPrice] = useState(0);
   const [selectedFinish, setSelectedFinish] = useState("bianco");
   const [previewImage, setPreviewImage] = useState(coupleBust);
@@ -60,8 +59,6 @@ export const Configurator = () => {
     },
   };
 
-  const shouldersPrice = 10.80;
-
   const calculateTotal = () => {
     const basePrice = sizes[selectedSize].price;
     const peopleExtra = basePrice * people[selectedPeople].multiplier;
@@ -71,7 +68,6 @@ export const Configurator = () => {
       basePrice +
       peopleExtra +
       materialExtra +
-      (includeShoulders ? shouldersPrice : 0) +
       finishPrice
     ).toFixed(2);
   };
@@ -119,7 +115,6 @@ export const Configurator = () => {
   const getBasePrice = () => sizes[selectedSize].price;
   const getPeopleExtra = () => getBasePrice() * people[selectedPeople].multiplier;
   const getMaterialExtra = () => selectedMaterial === "resina" ? materials.resina.getPrice(getBasePrice()) : 0;
-  const getShouldersExtra = () => includeShoulders ? shouldersPrice : 0;
 
   return (
     <section id="configurator" className="py-20 bg-gradient-to-b from-surface to-background">
@@ -244,13 +239,6 @@ export const Configurator = () => {
                     <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
                       <span className="text-muted-foreground">Resina premium (+30%)</span>
                       <span className="font-bold text-virgold">+€{getMaterialExtra().toFixed(2).replace(".", ",")}</span>
-                    </div>
-                  )}
-                  
-                  {includeShoulders && (
-                    <div className="flex justify-between items-center py-2 border-b border-border/50 animate-fade-in">
-                      <span className="text-muted-foreground">Spalle e torace</span>
-                      <span className="font-bold text-virgold">+€{shouldersPrice.toFixed(2).replace(".", ",")}</span>
                     </div>
                   )}
                   
